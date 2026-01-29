@@ -20,7 +20,7 @@ def append_json(region_type, data):
         data_list = []
 
     # 2. 将新字典追加到列表中
-    data_list.extend(data)
+    data_list = del_duplicate(data_list,data)
 
     # 3. 重新将列表写入文件（覆盖写入，保证格式合法）
     with open(f'data/{region_type}.json', "w", encoding="utf-8") as f:
@@ -49,3 +49,16 @@ def writer_today(region_type, data):
     """
     with open(f'data/{region_type}-today.json', "w", encoding="utf-8") as f:
         json.dump(data, f,ensure_ascii=False)
+
+def del_duplicate(old:list,new:list):
+    """
+    从JSON文件中删除重复数据（顶层为列表）
+    :param region_type: 地区编码
+    """
+    merged_list = old + new
+    unique_dict = {}
+    for d in merged_list:
+        unique_dict[d["url"]] = d  # 直接覆盖，保留最后一个
+    result = list(unique_dict.values())
+    return result
+    

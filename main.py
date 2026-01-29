@@ -19,6 +19,6 @@ def main():
             if index == 0:
                 utils.writer_today(region_type,image)
             images.append(image)
-        # utils.append_json(region_type, images)
+        utils.append_json(region_type, images)
 if __name__ == '__main__':
     main()

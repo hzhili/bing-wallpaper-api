@@ -1,19 +1,20 @@
 import json
 import os
+from pathlib import Path
 import random
 from fastapi import FastAPI, Query, HTTPException, status
 from fastapi.responses import RedirectResponse
 
 app = FastAPI(title="Bing Wallpaper API", version="1.0")
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 def get_location_file(location: str, today: bool = False) -> str:
     """获取指定地区的JSON文件路径"""
     if today:
-        return os.path.join(DATA_DIR, f"{location}-today.json")
+        return DATA_DIR / f"{location}-today.json"
     else:
-        return os.path.join(DATA_DIR, f"{location}.json")
+        return DATA_DIR / f"{location}.json"
 
 def get_today_wallpaper(location: str) -> dict:
     """获取指定地区的今日壁纸"""
@@ -68,8 +69,13 @@ def get_wallpapers(location: str) -> list:
     
     return []
 
-@app.get("/", response_class=RedirectResponse)
-async def root(location: str = Query(default="zh-CN", description="地区编码，默认为zh-CN")):
+@app.get("/")
+async def root():
+    """根路由，返回所有可用地区"""
+    return "部署成功"
+
+@app.get("/today", response_class=RedirectResponse)
+async def today(location: str = Query(default="zh-CN", description="地区编码，默认为zh-CN")):
     """获取今日壁纸并重定向"""
     wallpaper = get_today_wallpaper(location)
     
@@ -112,5 +118,6 @@ async def random_wallpaper(location: str = Query(default=None, description="地�
     return RedirectResponse(url=wallpaper["url"], status_code=status.HTTP_307_TEMPORARY_REDIRECT)
 
 # if __name__ == "__main__":
-#     import uvicorn
-#     uvicorn.run(app, host="0.0.0.0", port=8000)
+    # import uvicorn
+    # uvicorn.run(app, host="0.0.0.0", port=8000)
+#    print(get_location_file("zh-CN"))

@@ -34,9 +34,14 @@ jobs:
          
      - name: Commit and push json Files
        run: |
+        if test -z "$(git status -s)"; then
+          echo 'no commit'
+          exit 0;
+        else
           commit_message="自动拉取必应壁纸"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A
           git commit -a -m "${commit_message}"
           git push origin main
+        fi

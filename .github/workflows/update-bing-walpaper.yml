@@ -32,13 +32,11 @@ jobs:
        run: |
          python main.py
          
-     - name: Commit json Files
+     - name: Commit and push json Files
        run: |
-         git add data/*
-         git commit -m "update bing wallpaper"
-
-     - name: Push changes
-       uses:  ad-m/github-push-action@master
-       with:
-         github_token: ${{ secrets.GITHUB_TOKEN }}
-         branch: main
+          commit_message="自动拉取必应壁纸"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -a -m "${commit_message}"
+          git push origin main

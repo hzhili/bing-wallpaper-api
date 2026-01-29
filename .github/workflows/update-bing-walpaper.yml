@@ -1,0 +1,44 @@
+name: update-bing-walpaper
+
+on:
+  push:
+    branches:
+     - master
+  schedule:
+   - cron: '30 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Checkout
+       uses: actions/checkout@v6
+       with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+     - name: Set up Python
+       uses: actions/setup-python@v5
+       with:
+        cache: 'pip'
+        python-version: 3.12.12
+
+     - name: Install Requirements
+       run: |
+         pip install -r requirements.txt
+ 
+     - name: Update bing wallpaper
+       working-directory: ./
+       run: |
+         python main.py
+         
+     - name: Commit json Files
+       run: |
+         git add data/*
+         git commit -m "update bing wallpaper"
+
+     - name: Push changes
+       uses:  ad-m/github-push-action@master
+       with:
+         github_token: ${{ secrets.GITHUB_TOKEN }}
+         branch: master

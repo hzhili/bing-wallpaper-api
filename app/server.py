@@ -29,11 +29,7 @@ def get_today_wallpaper(location: str) -> dict:
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
-            if isinstance(data, list) and len(data) > 0:
-                first_item = data[0]
-                if isinstance(first_item, list) and len(first_item) > 0:
-                    return first_item[0]
-                return first_item
+            return data
     except Exception as e:
         print(f"Error reading {file_path}: {e}")
     
@@ -117,7 +113,7 @@ async def random_wallpaper(location: str = Query(default=None, description="åœ°å
     
     return RedirectResponse(url=wallpaper["url"], status_code=status.HTTP_307_TEMPORARY_REDIRECT)
 
-# if __name__ == "__main__":
-    # import uvicorn
-    # uvicorn.run(app, host="0.0.0.0", port=8000)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 #    print(get_location_file("zh-CN"))

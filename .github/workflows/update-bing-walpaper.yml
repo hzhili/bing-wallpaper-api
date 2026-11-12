@@ -14,11 +14,17 @@ jobs:
        with:
         token: ${{ secrets.GITHUB_TOKEN }}
     
+     # Floating patch version on purpose: `ubuntu-latest` is migrating to
+     # Ubuntu 26.04, and an exact pin like 3.12.12 has no build for that
+     # image — setup-python dies with:
+     #   The version '3.12.12' with architecture 'x64' was not found for Ubuntu 26.04.
+     # '3.12' resolves to the newest 3.12.x that ships for the current runner.
+     # setup-python v6 uses the node24 runtime (v5 targets deprecated node20).
      - name: Set up Python
-       uses: actions/setup-python@v5
+       uses: actions/setup-python@v6
        with:
         cache: 'pip'
-        python-version: 3.12.12
+        python-version: '3.12'
 
      - name: Install Requirements
        run: |
